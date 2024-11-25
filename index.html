@@ -1,0 +1,143 @@
+addEventListener('fetch', event => {
+  event.respondWith(handleRequest(event.request))
+})
+
+async function handleRequest(request) {
+  const html = `
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>影视网盘</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+        h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+        }
+        button {
+            padding: 5px 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #search {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .movie-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        .movie-item {
+            background-color: white;
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 4px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .movie-item:hover {
+            background-color: #f0f0f0;
+        }
+        .movie-title {
+            font-weight: bold;
+        }
+        .movie-episodes {
+            color: #666;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>影视网盘</h1>
+        <div class="buttons">
+            <button onclick="alert('分享功能即将推出')">分享</button>
+            <button onclick="alert('订阅功能即将推出')">订阅</button>
+        </div>
+    </header>
+
+    <input type="text" id="search" placeholder="搜索影视作品...">
+
+    <ul id="movieList" class="movie-list"></ul>
+
+    <script>
+        const movies = [
+            { title: "白夜破晓", episodes: "更至13" },
+            { title: "永夜星河", episodes: "32集全" },
+            { title: "小巷人家", episodes: "40集全" },
+            { title: "珠帘玉幕", episodes: "超前完结" },
+            { title: "风起陇西", episodes: "更至36" },
+            { title: "三体", episodes: "30集全" },
+            { title: "狂飙", episodes: "39集全" },
+            { title: "显微镜下的大明", episodes: "更至40" },
+        ];
+
+        function renderMovies(moviesToRender) {
+            const movieList = document.getElementById('movieList');
+            movieList.innerHTML = '';
+            moviesToRender.forEach(movie => {
+                const li = document.createElement('li');
+                li.className = 'movie-item';
+                li.innerHTML = \`
+                    <span class="movie-title">\${movie.title}</span>
+                    <span class="movie-episodes">\${movie.episodes}</span>
+                \`;
+                li.onclick = () => alert(\`您点击了 \${movie.title}。资源链接即将推出。\`);
+                movieList.appendChild(li);
+            });
+        }
+
+        function searchMovies() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const filteredMovies = movies.filter(movie => 
+                movie.title.toLowerCase().includes(searchTerm)
+            );
+            renderMovies(filteredMovies);
+        }
+
+        document.getElementById('search').addEventListener('input', searchMovies);
+
+        // 初始渲染
+        renderMovies(movies);
+    </script>
+</body>
+</html>
+  `;
+
+  return new Response(html, {
+    headers: { 'content-type': 'text/html;charset=UTF-8' },
+  })
+}
